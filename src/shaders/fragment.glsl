@@ -1,10 +1,10 @@
 #version 330 core
 
+in vec3 fragment_color;
 // Ouput data
 out vec3 color;
 
 void main()
 {
-    // Output color = red
-    color = vec3(0.125, 0.5, 0.125);
+    color = fragment_color;
 }

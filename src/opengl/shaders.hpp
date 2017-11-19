@@ -28,10 +28,12 @@ namespace OpenGL
         void use_program();
         void link_program();
 
+        operator GLuint();
+
     private:
         bool linked = false;
 
-        GLuint program;
+        GLuint program_id;
         std::vector<GLuint> shaders;
     };
 }

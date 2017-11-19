@@ -11,15 +11,17 @@
 class Model
 {
 public:
-    Model(std::initializer_list<glm::vec3> vertices);
+    Model(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec3> &colors);
     ~Model();
 
     void draw();
 
 private:
     std::vector<glm::vec3> vertices;
-    GLuint vertex_array;
-    GLuint vertex_buffer;
+    std::vector<glm::vec3> colors;
+    GLuint vao;
+    GLuint vbo_vertices;
+    GLuint vbo_colors;
 };
 
 

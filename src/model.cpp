@@ -1,41 +1,43 @@
 #include "model.hpp"
 
 
-Model::Model(std::initializer_list<glm::vec3> vertices) : vertices(vertices)
+Model::Model(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec3> &colors)
+        : vertices(vertices), colors(colors)
 {
-    glGenVertexArrays(1, &vertex_array);
-    glBindVertexArray(vertex_array);
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glGenBuffers(1, &vbo_vertices);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), this->vertices.data(), GL_STATIC_DRAW);
+
+    glGenBuffers(1, &vbo_colors);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), this->colors.data(), GL_STATIC_DRAW);
 }
 
 
 Model::~Model()
 {
     // Cleanup VBO
-    glDeleteBuffers(1, &vertex_buffer);
-    glDeleteVertexArrays(1, &vertex_array);
+    glDeleteBuffers(1, &vbo_vertices);
+    glDeleteVertexArrays(1, &vao);
 }
 
 
 void Model::draw()
 {
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(
-            0,                    // attribute 0. No particular reason for 0, but must match the layout in the shader.
-            3,  // size
-            GL_FLOAT,             // type
-            GL_FALSE,             // normalized?
-            0,                    // stride
-            (void*)0              // array buffer offset
-    );
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    // Draw the triangle !
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
     glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
+    glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);
 }

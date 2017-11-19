@@ -10,13 +10,13 @@ using namespace OpenGL;
 
 ShaderProgram::ShaderProgram()
 {
-    program = glCreateProgram();
+    program_id = glCreateProgram();
 }
 
 
 ShaderProgram::~ShaderProgram()
 {
-    glDeleteProgram(program);
+    glDeleteProgram(program_id);
 }
 
 
@@ -81,7 +81,7 @@ void ShaderProgram::use_program()
     if (glGetError() != GL_NO_ERROR)
         throw std::runtime_error("Unhandled OpenGL error");
 
-    glUseProgram(program);
+    glUseProgram(program_id);
 
     auto error = glGetError();
     if (error != GL_NO_ERROR)
@@ -100,21 +100,21 @@ void ShaderProgram::link_program()
 
     for (auto shader : shaders)
     {
-        glAttachShader(program, shader);
+        glAttachShader(program_id, shader);
     }
 
-    glLinkProgram(program);
+    glLinkProgram(program_id);
 
     GLint link_status;
-    glGetProgramiv(program, GL_LINK_STATUS, &link_status);
+    glGetProgramiv(program_id, GL_LINK_STATUS, &link_status);
 
     GLint info_len;
-    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_len);
+    glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &info_len);
 
     if (info_len > 0)
     {
         std::vector<char> buffer(info_len);
-        glGetProgramInfoLog(program, info_len, NULL, buffer.data());
+        glGetProgramInfoLog(program_id, info_len, NULL, buffer.data());
 
         std::clog << buffer.data() << std::endl;
     }
@@ -126,7 +126,12 @@ void ShaderProgram::link_program()
 
     for (auto shader : shaders)
     {
-        glDetachShader(program, shader);
+        glDetachShader(program_id, shader);
         glDeleteShader(shader);
     }
+}
+
+ShaderProgram::operator GLuint()
+{
+    return program_id;
 }
