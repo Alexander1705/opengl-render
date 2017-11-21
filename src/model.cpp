@@ -1,4 +1,5 @@
 #include "model.hpp"
+#include "opengl/shaders.hpp"
 
 
 Model::Model(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec3> &colors)
@@ -25,8 +26,13 @@ Model::~Model()
 }
 
 
-void Model::draw()
+void Model::render(const glm::mat4 &transformation)
 {
+    auto &shader = enable_shader();
+
+    GLint MVPMatrix = glGetUniformLocation(shader, "MVP");
+    glUniformMatrix4fv(MVPMatrix, 1, GL_FALSE, &transformation[0][0]);
+
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
@@ -40,4 +46,23 @@ void Model::draw()
 
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);
+}
+
+
+OpenGL::ShaderProgram & Model::enable_shader()
+{
+    static OpenGL::ShaderProgram shader_program;
+    static bool loaded = false;
+
+    if (!loaded)
+    {
+        loaded = true;
+
+        shader_program.attach_shader_file(OpenGL::ShaderType::Vertex, "../src/shaders/vertex.glsl");
+        shader_program.attach_shader_file(OpenGL::ShaderType::Fragment, "../src/shaders/fragment.glsl");
+    }
+
+    shader_program.use_program();
+
+    return shader_program;
 }

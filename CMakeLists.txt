@@ -11,10 +11,22 @@ find_package(glm REQUIRED)
 set(SOURCE_FILES
         src/main.cpp
 
-        src/opengl/shaders.hpp
-        src/opengl/shaders.cpp
+        src/window.cpp
+        src/window.hpp
+        src/scene.cpp
+        src/scene.hpp
         src/model.cpp
         src/model.hpp
+
+        src/opengl/shaders.hpp
+        src/opengl/shaders.cpp
+
+        src/lib/glfw.cpp
+        src/lib/glfw.hpp
+        src/lib/glew.cpp
+        src/lib/glew.hpp
+        src/lib/opengl.cpp
+        src/lib/opengl.hpp
         )
 
 add_executable(render ${SOURCE_FILES})

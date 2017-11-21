@@ -5,7 +5,8 @@
 #include <vector>
 
 #include <GL/glew.h>
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
+#include "opengl/shaders.hpp"
 
 
 class Model
@@ -14,7 +15,8 @@ public:
     Model(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec3> &colors);
     ~Model();
 
-    void draw();
+    void render(const glm::mat4 &transformation);
+    OpenGL::ShaderProgram & enable_shader();
 
 private:
     std::vector<glm::vec3> vertices;
