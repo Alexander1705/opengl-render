@@ -56,3 +56,8 @@ void Window::loop(Scene &scene)
         glfwPollEvents();
     }
 }
+
+Window::operator GLFWwindow*() const
+{
+    return window;
+}

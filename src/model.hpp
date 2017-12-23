@@ -7,23 +7,26 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include "opengl/shaders.hpp"
+#include "opengl/buffer.hpp"
+
+
+using OpenGL::Buffer;
 
 
 class Model
 {
 public:
-    Model(const std::vector<glm::vec3> &vertices, const std::vector<glm::vec3> &colors);
+    Model(Buffer<glm::vec3> &&vertices, Buffer<glm::vec3> &&normals);
     ~Model();
 
     void render(const glm::mat4 &transformation);
     OpenGL::ShaderProgram & enable_shader();
 
 private:
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> colors;
     GLuint vao;
-    GLuint vbo_vertices;
-    GLuint vbo_colors;
+
+    Buffer<glm::vec3> vertices;
+    Buffer<glm::vec3> normals;
 };
 
 

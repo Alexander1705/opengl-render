@@ -20,15 +20,15 @@ void Scene::set_camera(const glm::vec3 &camera, const glm::vec3 &look_at)
     this->look_at = look_at;
 }
 
-void Scene::add_model(Model *model, const glm::vec3 &position)
+void Scene::add_model(const std::shared_ptr<OpenGL::Mesh> &mesh, const glm::vec3 &position)
 {
-    objects[model] = position;
+    objects[mesh] = position;
 }
 
 
-void Scene::remove_model(Model *model)
+void Scene::remove_model(const std::shared_ptr<OpenGL::Mesh> &mesh)
 {
-    objects.erase(model);
+    objects.erase(mesh);
 }
 
 
@@ -44,6 +44,6 @@ void Scene::render()
         glm::mat4 model;
         glm::translate(model, model_pos_pair.second);
 
-        model_pos_pair.first->render(perspective * view * model);
+//        model_pos_pair.first->render(<#initializer#>);
     }
 }

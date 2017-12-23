@@ -1,16 +1,28 @@
 #version 330 core
 
-// Input vertex data, different for all executions of this shader.
-layout(location = 0) in vec3 vertex;
-layout(location = 1) in vec3 color;
+layout(location = 0) in vec3 vertex_ms;
+layout(location = 1) in vec3 normal_ms;
+
+const vec3 SunLight = normalize(vec3(1, 3, 2));
+
+const mat4 ModelToWorld = mat4(
+    1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0
+);
 
 uniform mat4 MVP;
 
-out vec3 fragment_color;
+out vec3 vertex_color;
 
 void main()
 {
-    gl_Position= MVP * vec4(vertex, 1);
+    gl_Position = MVP * vec4(vertex_ms, 1);
 
-    fragment_color = color;
+    const vec3 ambient = vec3(0.1, 0.1, 0.1);
+    const vec3 diffuse = vec3(0.5, 0.5, 0.5);
+    vec3 normal_ws = (ModelToWorld * vec4(normal_ms, 0)).xyz;
+    float k = clamp(dot(normal_ws, SunLight), 0, 1);
+    vertex_color = ambient + k * diffuse;
 }

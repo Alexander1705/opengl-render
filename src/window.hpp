@@ -21,6 +21,8 @@ public:
 
     void loop(Scene &scene);
 
+    operator GLFWwindow*() const;
+
 protected:
     static void OnResizeCallback(GLFWwindow *window, int new_width, int new_height);
 
