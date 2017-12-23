@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     Lib::GLEW::Init();
     Lib::OpenGL::Init();
 
-    auto cube = OpenGL::Mesh::Load("../assets/cube.obj");
+    auto rocket = OpenGL::Mesh::Load("../assets/rocket.obj");
 
     OpenGL::ShaderProgram shader_progam;
     shader_progam.attach_shader_file(OpenGL::ShaderType::Vertex, "../src/shaders/vertex.glsl");
@@ -36,7 +36,17 @@ int main(int argc, char **argv)
     float angle = 0.0;
 
     glm::vec3 camera(3.0f, 3.0f, 3.0f);
+
+    auto perspective = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.01f, 100.0f);
+    auto view = glm::lookAt(camera, glm::vec3(), glm::vec3(0.0f, 1.0f, 0.0f));
+
     GLint MVPMatrix = glGetUniformLocation(shader_progam, "MVP");
+    GLint ModelMatrix = glGetUniformLocation(shader_progam, "ModelToWorld");
+
+    OpenGL::Error::Check();
+
+
+    auto rocket_fix = glm::translate(glm::scale(glm::mat4(), glm::vec3{0.25f, 0.25f, 0.25f}), glm::vec3{0.0f, -4.0f, 0.0f});
 
     while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
@@ -50,24 +60,23 @@ int main(int argc, char **argv)
 
         t0 = t;
 
-        camera = glm::vec3(4 * std::cos(angle), 3, 4 * std::sin(angle));
+        ;
+        auto model = glm::rotate(rocket_fix, 4 * angle, glm::vec3(0, 1, 0));
 
         OpenGL::Error::Check();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        auto perspective = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.01f, 100.0f);
-        auto view = glm::lookAt(camera, glm::vec3(), glm::vec3(0.0f, 1.0f, 0.0f));
-
-        auto transformation = perspective * view;
+        auto transformation = perspective * view * model;
 
         OpenGL::Error::Check();
 
-        glBindVertexArray(cube.vao);
+        glBindVertexArray(rocket.vao);
 
         OpenGL::Error::Check();
 
         glUniformMatrix4fv(MVPMatrix, 1, GL_FALSE, &transformation[0][0]);
+        glUniformMatrix4fv(ModelMatrix, 1, GL_FALSE, &model[0][0]);
 
         OpenGL::Error::Check();
 
@@ -76,7 +85,7 @@ int main(int argc, char **argv)
 
         OpenGL::Error::Check();
 
-        cube.vertex_buffer.bind();
+        rocket.vertex_buffer.bind();
 
         OpenGL::Error::Check();
 
@@ -84,16 +93,16 @@ int main(int argc, char **argv)
 
         OpenGL::Error::Check();
 
-        cube.normal_buffer.bind();
+        rocket.normal_buffer.bind();
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
         OpenGL::Error::Check();
 
-        cube.index_buffer.bind();
+        rocket.index_buffer.bind();
 
         glDrawElements(
                 GL_TRIANGLES,      // mode
-                cube.index_buffer.size(),    // count
+                rocket.index_buffer.size(),    // count
                 GL_UNSIGNED_INT,   // type
                 (void*)0           // element array buffer offset
         );
