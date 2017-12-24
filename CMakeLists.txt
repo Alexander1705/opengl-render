@@ -11,16 +11,18 @@ find_package(assimp REQUIRED)
 
 set(SOURCE_FILES
         src/main.cpp
-
         src/window.cpp
         src/window.hpp
-        src/scene.cpp
-        src/scene.hpp
-        src/model.cpp
-        src/model.hpp
+        src/mesh.cpp
+        src/mesh.hpp
+
 
         src/opengl/shaders.hpp
         src/opengl/shaders.cpp
+        src/opengl/buffer.cpp
+        src/opengl/buffer.hpp
+        src/opengl/errors.cpp
+        src/opengl/errors.hpp
 
         src/lib/glfw.cpp
         src/lib/glfw.hpp
@@ -28,12 +30,6 @@ set(SOURCE_FILES
         src/lib/glew.hpp
         src/lib/opengl.cpp
         src/lib/opengl.hpp
-        src/opengl/buffer.cpp
-        src/opengl/buffer.hpp
-        src/mesh.cpp
-        src/mesh.hpp
-        src/opengl/errors.cpp
-        src/opengl/errors.hpp
         )
 
 add_executable(render ${SOURCE_FILES})

@@ -71,3 +71,39 @@ Mesh::Mesh(Mesh &&moved) noexcept
 {
     moved.vao = 0;
 }
+
+
+void Mesh::draw(const glm::mat4 &MVP, const glm::mat4 &model, OpenGL::ShaderProgram &shader)
+{
+    shader.use_program();
+
+    GLint MVPMatrix = glGetUniformLocation(shader, "MVP");
+    GLint ModelMatrix = glGetUniformLocation(shader, "ModelToWorld");
+
+    glBindVertexArray(vao);
+
+    glUniformMatrix4fv(MVPMatrix, 1, GL_FALSE, &MVP[0][0]);
+    glUniformMatrix4fv(ModelMatrix, 1, GL_FALSE, &model[0][0]);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    vertex_buffer.bind();
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    normal_buffer.bind();
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    index_buffer.bind();
+
+    glDrawElements(
+            GL_TRIANGLES,      // mode
+            index_buffer.size(),    // count
+            GL_UNSIGNED_INT,   // type
+            (void*)0           // element array buffer offset
+    );
+
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(0);
+}

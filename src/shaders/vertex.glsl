@@ -14,8 +14,8 @@ void main()
 {
     gl_Position = MVP * vec4(vertex_ms, 1);
 
-    const vec3 ambient = vec3(0.1, 0.1, 0.1);
-    const vec3 diffuse = vec3(0.5, 0.5, 0.5);
+    const vec3 ambient = vec3(0.2, 0.2, 0.2);
+    const vec3 diffuse = vec3(0.7, 0.7, 0.7);
     vec3 normal_ws = (ModelToWorld * vec4(normal_ms, 0)).xyz;
     float k = clamp(dot(normal_ws, SunLight), 0, 1);
     vertex_color = ambient + k * diffuse;

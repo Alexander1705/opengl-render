@@ -6,10 +6,11 @@
 #include <vector>
 #include <stdexcept>
 
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 #include <assimp/mesh.h>
 #include <glm/detail/type_mat.hpp>
 #include "opengl/buffer.hpp"
+#include "opengl/shaders.hpp"
 
 
 namespace OpenGL
@@ -29,6 +30,8 @@ namespace OpenGL
         Mesh(Mesh &&) noexcept;
 
         static Mesh Load(const std::string &path);
+
+        void draw(const glm::mat4 &MVP, const glm::mat4 &model, OpenGL::ShaderProgram &shader);
 
 //    private:
         GLuint vao = 0;

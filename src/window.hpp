@@ -7,7 +7,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "scene.hpp"
 
 
 class Window
@@ -19,7 +18,7 @@ public:
 
     Window(const Window &) = delete;
 
-    void loop(Scene &scene);
+    void loop();
 
     operator GLFWwindow*() const;
 
