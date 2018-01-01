@@ -6,7 +6,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
+#include <sigc++/sigc++.h>
 
 
 class Window
@@ -21,9 +21,6 @@ public:
     void loop();
 
     operator GLFWwindow*() const;
-
-protected:
-    static void OnResizeCallback(GLFWwindow *window, int new_width, int new_height);
 
 private:
     GLFWwindow *window;

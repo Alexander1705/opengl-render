@@ -3,10 +3,15 @@ project(render)
 
 set(CMAKE_CXX_STANDARD 17)
 
+
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(assimp REQUIRED)
+
+find_package(PkgConfig)
+pkg_check_modules(SIGC REQUIRED sigc++-2.0)
+pkg_check_modules(GLEW REQUIRED glew)
 
 
 set(SOURCE_FILES
@@ -30,7 +35,8 @@ set(SOURCE_FILES
         src/lib/glew.hpp
         src/lib/opengl.cpp
         src/lib/opengl.hpp
-        )
+        src/camera.cpp src/camera.hpp)
 
 add_executable(render ${SOURCE_FILES})
-target_link_libraries(render ${OPENGL_LIBRARIES} GLEW glm glfw ${ASSIMP_LIBRARIES})
+target_include_directories(render PUBLIC ${OPENGL_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIRS} ${SIGC_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
+target_link_libraries(render ${OPENGL_LIBRARIES} GLEW glm glfw ${ASSIMP_LIBRARIES} ${SIGC_LIBRARIES} ${GLEW_LIBRARIES})
