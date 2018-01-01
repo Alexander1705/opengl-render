@@ -12,6 +12,10 @@ namespace OpenGL
     public:
         Camera(glm::vec3 position, glm::vec3 direction, glm::vec3 up_vector = glm::vec3(0.0f, 1.0f, 0.0f));
 
+        void move_forward(float distance);
+        void move_up(float distance);
+        void move_right(float distance);
+
         void add_yaw(float angle);
         void add_roll(float angle);
         void add_pitch(float angle);

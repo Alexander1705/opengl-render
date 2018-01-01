@@ -28,12 +28,13 @@ int main(int argc, char **argv)
     shader_progam.attach_shader_file(OpenGL::ShaderType::Fragment, "../src/shaders/fragment.glsl");
     shader_progam.use_program();
 
-    OpenGL::Camera camera(glm::vec3(8.0f, 10.0f, 10.0f), glm::vec3(1.0f));
+    OpenGL::Camera camera(glm::vec3(8.0f, 10.0f, 10.0f), glm::vec3(-8.0f, -10.0f, -10.0f));
 
     auto perspective = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 1.0f, 1000.0f);
 
 
     float t0 = glfwGetTime();
+    float tp = t0;
     float angle = 0.0;
 
     glm::vec3 rocket_translate(0.0f, 0.0f, 0.0f);
@@ -53,10 +54,20 @@ int main(int argc, char **argv)
         double x, y;
         glfwGetCursorPos(window, &x, &y);
 
-        camera.add_pitch(glm::radians(360 - y) / 2);
-        camera.add_yaw(glm::radians(640 - x) / 2);
+        camera.add_pitch(glm::radians(360 - y) / 4);
+        camera.add_yaw(glm::radians(640 - x) / 4);
 
         glfwSetCursorPos(window, 640, 360);
+
+        float d = 10 * (t - tp); tp = t;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { camera.move_forward(d); }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) { camera.move_forward(-d); }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) { camera.move_right(-d); }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) { camera.move_right(d); }
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) { camera.move_up(d); }
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) { camera.move_up(-d); }
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) { camera.add_roll(-d/10); }
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) { camera.add_roll(d/10); }
 
 
         auto view = camera.view_matrix(16.0f / 9.0f);

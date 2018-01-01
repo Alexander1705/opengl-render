@@ -38,3 +38,21 @@ void OpenGL::Camera::rotate(glm::vec3 axis, float angle)
     direction = rotation * glm::vec4(direction, 0.0f);
     up_vector = rotation * glm::vec4(up_vector, 0.0f);
 }
+
+
+void OpenGL::Camera::move_forward(float distance)
+{
+    position += glm::normalize(direction) * distance;
+}
+
+
+void OpenGL::Camera::move_up(float distance)
+{
+    position += glm::normalize(up_vector) * distance;
+}
+
+
+void OpenGL::Camera::move_right(float distance)
+{
+    position += glm::normalize(glm::cross(direction, up_vector)) * distance;
+}
