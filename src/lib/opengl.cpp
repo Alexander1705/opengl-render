@@ -6,10 +6,13 @@
 void ::Lib::OpenGL::Init()
 {
     glClearColor(0.7f, 0.7f, 1.0f, 0.0f);
-    glEnable(GL_DEPTH_TEST);
+
     glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
+
     glCullFace(GL_FRONT);
     glFrontFace(GL_CW);
+    glEnable(GL_CULL_FACE);
 }
 
 

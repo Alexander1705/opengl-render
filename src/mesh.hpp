@@ -31,7 +31,7 @@ namespace OpenGL
 
         static Mesh Load(const std::string &path);
 
-        void draw(const glm::mat4 &MVP, const glm::mat4 &model, OpenGL::ShaderProgram &shader);
+        void draw(const glm::mat4 &model2screen, const glm::mat4 &model2camera, OpenGL::ShaderProgram &shader);
 
 //    private:
         GLuint vao = 0;

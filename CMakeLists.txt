@@ -10,7 +10,6 @@ find_package(glm REQUIRED)
 find_package(assimp REQUIRED)
 
 find_package(PkgConfig)
-pkg_check_modules(SIGC REQUIRED sigc++-2.0)
 pkg_check_modules(GLEW REQUIRED glew)
 
 

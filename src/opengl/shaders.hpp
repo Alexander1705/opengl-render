@@ -36,6 +36,27 @@ namespace OpenGL
         GLuint program_id;
         std::vector<GLuint> shaders;
     };
+
+
+    /**
+     * frag_color:
+     *   - material
+     *       diffuse_albedo
+     *       specular_albedo
+     *       roughness
+     *
+     *   - normal
+     *       per_vertex_normals
+     *       mapped_normals
+     *
+     *   - light
+     *       dynamic_light
+     *
+     *   - look
+     *
+     *
+     * material = {diffuse_albedo, specular_albedo, roughness}
+     */
 }
 
 

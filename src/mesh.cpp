@@ -73,17 +73,17 @@ Mesh::Mesh(Mesh &&moved) noexcept
 }
 
 
-void Mesh::draw(const glm::mat4 &MVP, const glm::mat4 &model, OpenGL::ShaderProgram &shader)
+void Mesh::draw(const glm::mat4 &model2screen, const glm::mat4 &model2camera, OpenGL::ShaderProgram &shader)
 {
     shader.use_program();
 
-    GLint MVPMatrix = glGetUniformLocation(shader, "MVP");
-    GLint ModelMatrix = glGetUniformLocation(shader, "ModelToWorld");
+    GLint ModelToScreen = glGetUniformLocation(shader, "ModelToScreen");
+    GLint ModelMatrix = glGetUniformLocation(shader, "ModelToCamera");
 
     glBindVertexArray(vao);
 
-    glUniformMatrix4fv(MVPMatrix, 1, GL_FALSE, &MVP[0][0]);
-    glUniformMatrix4fv(ModelMatrix, 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(ModelToScreen, 1, GL_FALSE, &model2screen[0][0]);
+    glUniformMatrix4fv(ModelMatrix, 1, GL_FALSE, &model2camera[0][0]);
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);

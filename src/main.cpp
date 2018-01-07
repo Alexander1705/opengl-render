@@ -20,8 +20,7 @@ int main(int argc, char **argv)
     Lib::GLEW::Init();
     Lib::OpenGL::Init();
 
-    auto rocket = OpenGL::Mesh::Load("../assets/rocket.obj");
-    auto ground = OpenGL::Mesh::Load("../assets/ground.obj");
+    auto object = OpenGL::Mesh::Load("../assets/scene.obj");
 
     OpenGL::ShaderProgram shader_progam;
     shader_progam.attach_shader_file(OpenGL::ShaderType::Vertex, "../src/shaders/vertex.glsl");
@@ -30,7 +29,7 @@ int main(int argc, char **argv)
 
     OpenGL::Camera camera(glm::vec3(8.0f, 10.0f, 10.0f), glm::vec3(-8.0f, -10.0f, -10.0f));
 
-    auto perspective = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 1.0f, 1000.0f);
+    auto perspective = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 1000.0f);
 
 
     float t0 = glfwGetTime();
@@ -42,14 +41,14 @@ int main(int argc, char **argv)
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     glfwSetCursorPos(window, 640, 360);
 
+    float rendering_time;
+    int frames = 0;
+
+    GLint light_uniform = glGetUniformLocation(shader_progam, "c_light");
+
     while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
     {
         float t = glfwGetTime();
-
-        if (t - t0 > 5.0f)
-        {
-            rocket_translate = glm::vec3(0, 4 * std::pow((t - 5.0f), 2), 0);
-        }
 
         double x, y;
         glfwGetCursorPos(window, &x, &y);
@@ -70,17 +69,35 @@ int main(int argc, char **argv)
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) { camera.add_roll(d/10); }
 
 
-        auto view = camera.view_matrix(16.0f / 9.0f);
+        auto WorldToCamera = camera.view_matrix(16.0f / 9.0f);
 
         auto rocket_transform = glm::translate(glm::mat4(), rocket_translate);
 
+        auto ModelToScreen = perspective * WorldToCamera;
+
+        float frame_start = glfwGetTime();
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        auto MVProcket = perspective * view * rocket_transform;
-        auto MVPground = perspective * view;
 
-        rocket.draw(MVProcket, rocket_transform, shader_progam);
-        ground.draw(MVPground, glm::mat4(), shader_progam);
+        glm::vec4 light = glm::normalize(WorldToCamera * glm::vec4(1.0, -2.0, -3.0, 0.0));
+        glUniform3fv(light_uniform, 1, &light[0]);
+        OpenGL::Error::Check();
+
+        object.draw(ModelToScreen, WorldToCamera, shader_progam);
+
+        float frame_end = glfwGetTime();
+
+        frames++;
+        rendering_time += frame_end - frame_start;
+
+        if (frames >= 60)
+        {
+            std::cout << rendering_time * 1000 / 60 << "ms per frame (" << 60 / rendering_time << " fps)" << std::endl;
+
+            frames = 0;
+            rendering_time = 0;
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
