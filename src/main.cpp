@@ -80,7 +80,7 @@ int main(int argc, char **argv)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        glm::vec4 light = glm::normalize(WorldToCamera * glm::vec4(1.0, -2.0, -3.0, 0.0));
+        glm::vec4 light = glm::normalize(WorldToCamera * glm::vec4(-1.0, 2.0, 3.0, 0.0));
         glUniform3fv(light_uniform, 1, &light[0]);
         OpenGL::Error::Check();
 
